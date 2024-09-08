@@ -39,6 +39,7 @@ tasks.withType<Jar> {
         val now = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(Date())
         attributes(mapOf(
             "Implementation-Timestamp" to now,
+            "MixinConfigs" to "dataforge.mixins.json",
             "FMLModType" to "GAMELIBRARY"
         ))
     }

@@ -8,5 +8,5 @@ import java.util.concurrent.CompletableFuture
 data class DataProviderContext(
     val packOutput: PackOutput,
     val lookupProvider: CompletableFuture<HolderLookup.Provider>,
-    val fileHelper: ExistingFileHelper? = null
+    val fileHelper: ExistingFileHelper
 )
