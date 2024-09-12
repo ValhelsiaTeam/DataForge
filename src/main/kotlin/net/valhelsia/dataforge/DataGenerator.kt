@@ -21,6 +21,7 @@ internal object DataGenerator {
     private fun GatherDataEvent.createContext() = DataProviderContext(
         this.generator.packOutput,
         this.lookupProvider,
-        this.existingFileHelper
+        this.existingFileHelper,
+        this.modContainer.modId
     )
 }
