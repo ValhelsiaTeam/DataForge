@@ -5,5 +5,5 @@ import net.valhelsia.dataforge.recipe.DataForgeRecipePart;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(ItemLike.class)
-public class ItemLikeMixin implements DataForgeRecipePart {
+public interface ItemLikeMixin extends DataForgeRecipePart {
 }
