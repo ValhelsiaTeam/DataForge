@@ -9,8 +9,8 @@ import net.minecraft.world.item.crafting.Ingredient
 import net.minecraft.world.level.ItemLike
 
 data class ValhelsiaShapedRecipeBuilder(val builder: ShapedRecipeBuilder) {
-    fun unlockedBy(provider: RecipeSubProvider, itemLike: ItemLike?): ValhelsiaShapedRecipeBuilder {
-        return this.unlockedBy(provider, RecipePart.of(itemLike))
+    fun unlockedBy(provider: RecipeSubProvider, part: DataForgeRecipePart): ValhelsiaShapedRecipeBuilder {
+        return this.unlockedBy(provider, RecipePart.of(part))
     }
 
     fun unlockedBy(provider: RecipeSubProvider, part: RecipePart<*>): ValhelsiaShapedRecipeBuilder {
@@ -37,29 +37,14 @@ data class ValhelsiaShapedRecipeBuilder(val builder: ShapedRecipeBuilder) {
         return this
     }
 
-    fun define(symbol: Char, part: RecipePart<*>): ValhelsiaShapedRecipeBuilder {
-        if (part.get() is ItemLike) {
-            this.define(symbol, part.get() as ItemLike)
-
-            return this
-        }
-
-        if (part.get() is TagKey<*>) {
-            this.define(symbol, part.get() as TagKey<Item?>)
-
-            return this
-        }
-
-        if (part.get() is Ingredient) {
-            this.define(symbol, part.get() as Ingredient)
-
-            return this
-        }
-
-        throw IllegalArgumentException("Invalid type: " + part.get()!!.javaClass)
+    fun define(symbol: Char, part: DataForgeRecipePart) = when (part) {
+        is ItemLike -> this.define(symbol, part)
+        is TagKey<*> -> this.define(symbol, part as TagKey<Item>)
+        is Ingredient -> this.define(symbol, part)
+        else -> throw IllegalArgumentException("Invalid type: " + part.javaClass)
     }
 
-    fun define(symbol: Char, tag: TagKey<Item?>): ValhelsiaShapedRecipeBuilder {
+    fun define(symbol: Char, tag: TagKey<Item>): ValhelsiaShapedRecipeBuilder {
         builder.define(symbol, tag)
 
         return this
@@ -78,8 +63,6 @@ data class ValhelsiaShapedRecipeBuilder(val builder: ShapedRecipeBuilder) {
     }
 
     companion object {
-        @JvmStatic
-        @JvmOverloads
         fun shaped(category: RecipeCategory, result: ItemLike, count: Int = 1): ValhelsiaShapedRecipeBuilder {
             return ValhelsiaShapedRecipeBuilder(ShapedRecipeBuilder(category, result, count))
         }
