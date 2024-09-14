@@ -7,7 +7,7 @@ import net.valhelsia.dataforge.DataProviderContext
 abstract class DataForgeBlockTagsProvider(context: DataProviderContext) : BlockTagsProvider(
     context.packOutput,
     context.lookupProvider,
-    context.modId,
+    DataForge.modId,
     context.fileHelper
 ) {
     init {

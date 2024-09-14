@@ -8,6 +8,6 @@ abstract class DataForgeItemTagsProvider(context: DataProviderContext) : ItemTag
     context.packOutput,
     context.lookupProvider,
     DataForge.blockTagLookup ?: throw IllegalStateException("Block tag lookup not initialized"),
-    context.modId,
+    DataForge.modId,
     context.fileHelper
 )

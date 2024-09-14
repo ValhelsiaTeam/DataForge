@@ -1,24 +1,20 @@
 package net.valhelsia.dataforge.recipe
 
+import net.minecraft.core.HolderLookup
 import net.minecraft.data.recipes.RecipeOutput
 import net.minecraft.data.recipes.RecipeProvider
 import net.valhelsia.dataforge.DataProviderContext
 
 class DataForgeRecipeProvider(
     private val context: DataProviderContext,
-    vararg subProviders: (DataForgeRecipeProvider) -> RecipeSubProvider
+    private vararg val subProviders: RecipeSubProvider
 ) : RecipeProvider(context.packOutput, context.lookupProvider) {
-    private val subProviders: List<RecipeSubProvider> = subProviders.map { it.invoke(this) }
-
-    lateinit var recipeOutput: RecipeOutput
 
     override fun buildRecipes(recipeOutput: RecipeOutput) {
-        this.recipeOutput = recipeOutput
-
-        this.context.lookupProvider.thenAccept { provider ->
-            subProviders.forEach { it.registerRecipes(provider) }
-        }
+        this.context.lookupProvider.thenAccept { runSubProviders(recipeOutput, it) }
     }
 
-    fun getModId() = this.context.modId
+    private fun runSubProviders(recipeOutput: RecipeOutput, provider: HolderLookup.Provider) {
+        subProviders.forEach { it.registerRecipes(recipeOutput, provider) }
+    }
 }

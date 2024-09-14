@@ -5,27 +5,33 @@ import net.minecraft.advancements.critereon.InventoryChangeTrigger
 import net.minecraft.advancements.critereon.ItemPredicate
 import net.minecraft.core.HolderLookup
 import net.minecraft.core.registries.BuiltInRegistries
-import net.minecraft.data.recipes.RecipeBuilder
-import net.minecraft.data.recipes.RecipeCategory
-import net.minecraft.data.recipes.ShapedRecipeBuilder
-import net.minecraft.data.recipes.ShapelessRecipeBuilder
+import net.minecraft.data.recipes.*
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.tags.TagKey
 import net.minecraft.world.item.Item
 import net.minecraft.world.level.ItemLike
 import net.neoforged.neoforge.common.Tags
+import net.valhelsia.dataforge.DataForge
 import java.util.Optional
 
-abstract class RecipeSubProvider(private val provider: DataForgeRecipeProvider) {
+abstract class RecipeSubProvider {
+
+    private lateinit var recipeOutput: RecipeOutput
+
+    internal fun registerRecipes(recipeOutput: RecipeOutput, lookupProvider: HolderLookup.Provider) {
+        this.recipeOutput = recipeOutput
+        
+        this.registerRecipes(lookupProvider)
+    }
     abstract fun registerRecipes(lookupProvider: HolderLookup.Provider)
 
     fun add(builder: RecipeBuilder, path: String? = null) {
         val id = when {
             path == null -> RecipeBuilder.getDefaultRecipeId(builder.result)
-            else -> ResourceLocation.fromNamespaceAndPath(provider.getModId(), path)
+            else -> ResourceLocation.fromNamespaceAndPath(DataForge.modId, path)
         }
 
-        builder.save(provider.recipeOutput, id)
+        builder.save(recipeOutput, id)
     }
 
     fun storageRecipe(item: ItemLike, block: ItemLike, groupItem: String? = null, groupBlock: String? = null) {

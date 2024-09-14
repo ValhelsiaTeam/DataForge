@@ -9,6 +9,7 @@ object DataForge {
 
     internal var collector: DataCollector? = null
     internal var blockTagLookup: CompletableFuture<TagLookup<Block>>? = null
+    internal lateinit var modId: String
 
     fun setup(collector: DataCollector, eventBus: IEventBus) {
         DataForge.collector = collector

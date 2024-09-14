@@ -12,6 +12,8 @@ internal object DataGenerator {
         val collector = DataForge.collector ?: return
         collector.collectData(event.createContext())
 
+        DataForge.modId = event.modContainer.modId
+
         collector.providers
             .filterKeys { it.isEnabled(event) }
             .flatMap { it.value }
@@ -21,7 +23,6 @@ internal object DataGenerator {
     private fun GatherDataEvent.createContext() = DataProviderContext(
         this.generator.packOutput,
         this.lookupProvider,
-        this.existingFileHelper,
-        this.modContainer.modId
+        this.existingFileHelper
     )
 }
