@@ -1,0 +1,11 @@
+{
+  "net/minecraft/world/item/crafting/Ingredient": [
+    "net/valhelsia/dataforge/recipe/DataForgeRecipePart"
+  ],
+  "net/minecraft/world/level/ItemLike": [
+    "net/valhelsia/dataforge/recipe/DataForgeRecipePart"
+  ],
+  "net/minecraft/tags/TagKey": [
+    "net/valhelsia/dataforge/recipe/DataForgeRecipePart"
+  ]
+}

@@ -11,7 +11,7 @@ plugins {
 }
 
 group = "net.valhelsia"
-version = "1.0-SNAPSHOT"
+version = "0.1.1"
 
 repositories {
     mavenCentral()
@@ -19,6 +19,11 @@ repositories {
 
 neoForge {
     version = project.property("neo_version") as String
+
+    interfaceInjectionData {
+        from("interfaces.json")
+        publish(file("interfaces.json"))
+    }
 }
 
 dependencies {
@@ -42,5 +47,24 @@ tasks.withType<Jar> {
             "MixinConfigs" to "dataforge.mixins.json",
             "FMLModType" to "GAMELIBRARY"
         ))
+    }
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            artifactId = "dataforge"
+            from(components["java"])
+        }
+    }
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/ValhelsiaTeam/DataForge")
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
     }
 }

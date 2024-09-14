@@ -4,7 +4,10 @@
   "compatibilityLevel": "JAVA_21",
   "package": "net.valhelsia.dataforge.mixin",
   "mixins": [
-    "ModelProviderMixin"
+    "IngredientMixin",
+    "ItemLikeMixin",
+    "ModelProviderMixin",
+    "TagKeyMixin"
   ],
   "client": [
   ],
