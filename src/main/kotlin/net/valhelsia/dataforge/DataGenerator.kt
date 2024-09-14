@@ -9,10 +9,10 @@ internal object DataGenerator {
     fun gatherData(event: GatherDataEvent) {
         println("Gathering data...")
 
+        DataForge.modId = event.modContainer.modId
+
         val collector = DataForge.collector ?: return
         collector.collectData(event.createContext())
-
-        DataForge.modId = event.modContainer.modId
 
         collector.providers
             .filterKeys { it.isEnabled(event) }
