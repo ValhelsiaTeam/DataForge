@@ -12,7 +12,6 @@ import net.minecraft.data.recipes.ShapelessRecipeBuilder
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.tags.TagKey
 import net.minecraft.world.item.Item
-import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.crafting.Ingredient
 import net.minecraft.world.level.ItemLike
 import net.neoforged.neoforge.common.Tags
@@ -32,26 +31,25 @@ abstract class RecipeSubProvider(private val provider: DataForgeRecipeProvider) 
     }
 
     fun storageRecipe(item: ItemLike, block: ItemLike, groupItem: String? = null, groupBlock: String? = null) {
-        this.shaped(
-            category = RecipeCategory.MISC,
-            result = block,
-            path = getName(block) + "_from_" + getName(item)
-        ) { it.group(groupBlock).pattern("###").pattern("###").pattern("###").define('#', item).unlockedBy(this, item) }
+        this.shaped(RecipeCategory.MISC, block, path = "${getName(block)}_from_${getName(item)}") {
+            it.group(groupBlock).pattern("###").pattern("###").pattern("###").define('#', item).unlockedBy(this, item)
+        }
 
-        this.shapeless(
-            category = RecipeCategory.BUILDING_BLOCKS,
-            result = item,
-            count = 9,
-            path = getName(item) + "_from_" + getName(block)
-        ) { it.group(groupItem).requires(block).unlockedBy("has_item", has(block)) }
+        this.shapeless(RecipeCategory.BUILDING_BLOCKS, item, 9, "${getName(item)}_from_${getName(block)}") {
+            it.group(groupItem).requires(block).unlockedBy("has_item", has(block))
+        }
     }
 
     fun simple2x2(category: RecipeCategory, result: ItemLike, item: DataForgeRecipePart) {
-        this.shaped(category, result) { it.pattern("##").pattern("##").define('#', item).unlockedBy(this, item) }
+        this.shaped(category, result) {
+            it.pattern("##").pattern("##").define('#', item).unlockedBy(this, item)
+        }
     }
 
     fun singleRow(category: RecipeCategory, result: ItemLike, item: DataForgeRecipePart) {
-        this.shaped(category, result) { it.pattern("###").define('#', item).unlockedBy(this, item) }
+        this.shaped(category, result) {
+            it.pattern("###").define('#', item).unlockedBy(this, item)
+        }
     }
 
     fun surroundingItem(
@@ -74,11 +72,9 @@ abstract class RecipeSubProvider(private val provider: DataForgeRecipeProvider) 
     }
 
     fun planks(result: ItemLike, log: TagKey<Item>, count: Int = 4) {
-        this.shapeless(
-            RecipeCategory.BUILDING_BLOCKS,
-            result,
-            count
-        ) { it.requires(log).unlockedBy("has_log", has(log)) }
+        this.shapeless(RecipeCategory.BUILDING_BLOCKS, result, count) {
+            it.requires(log).unlockedBy("has_log", has(log))
+        }
     }
 
     fun slab(result: ItemLike, planks: DataForgeRecipePart) {
@@ -136,9 +132,7 @@ abstract class RecipeSubProvider(private val provider: DataForgeRecipeProvider) 
 
     fun helmet(result: ItemLike, material: DataForgeRecipePart) {
         this.shaped(RecipeCategory.COMBAT, result) { builder: ValhelsiaShapedRecipeBuilder ->
-            builder.pattern("###").pattern("# #").define('#', material).unlockedBy(
-                this, material
-            )
+            builder.pattern("###").pattern("# #").define('#', material).unlockedBy(this, material)
         }
     }
 
@@ -169,7 +163,7 @@ abstract class RecipeSubProvider(private val provider: DataForgeRecipeProvider) 
     fun chestBoat(result: ItemLike, boat: ItemLike) {
         this.shapeless(RecipeCategory.TRANSPORTATION, result) {
             it.requires(boat).requires(Tags.Items.CHESTS_WOODEN)
-                .unlockedBy("has_" + getName(boat), has(boat))
+                .unlockedBy("has_${getName(boat)}", has(boat))
                 .unlockedBy("has_chest", has(Tags.Items.CHESTS_WOODEN))
         }
     }
@@ -244,7 +238,7 @@ abstract class RecipeSubProvider(private val provider: DataForgeRecipeProvider) 
         count: Int = 1,
         path: String? = null,
         recipe: ShapedRecipeTransformer,
-    ) = this.add(recipe.invoke(shaped(category, result, count)).builder, path)
+    ) = add(recipe(shaped(category, result, count)).builder, path)
 
     fun shapeless(
         category: RecipeCategory,
@@ -252,48 +246,20 @@ abstract class RecipeSubProvider(private val provider: DataForgeRecipeProvider) 
         count: Int = 1,
         path: String? = null,
         recipe: ShapelessRecipeTransformer,
-    ) = this.add(recipe.invoke(ShapelessRecipeBuilder.shapeless(category, result, count)), path)
+    ) = add(recipe(ShapelessRecipeBuilder.shapeless(category, result, count)), path)
 
-    fun has(vararg items: ItemLike): Criterion<InventoryChangeTrigger.TriggerInstance> {
-        return inventoryTrigger(ItemPredicate.Builder.item().of(*items).build())
-    }
+    fun has(part: DataForgeRecipePart) = inventoryTrigger(when (part) {
+        is ItemLike -> ItemPredicate.Builder.item().of(part).build()
+        is TagKey<*> -> ItemPredicate.Builder.item().of(part as TagKey<Item>).build()
+        is Ingredient -> ItemPredicate.Builder.item().of().build()
+        else -> throw IllegalArgumentException("Invalid type: ${part.javaClass}")
+    })
 
-    fun has(tagKey: TagKey<Item>): Criterion<InventoryChangeTrigger.TriggerInstance> {
-        return inventoryTrigger(ItemPredicate.Builder.item().of(tagKey).build())
-    }
-
-    fun has(part: RecipePart<*>): Criterion<InventoryChangeTrigger.TriggerInstance> {
-        if (part.get() is ItemLike) {
-            return has(part.get() as ItemLike)
-        }
-
-        if (part.get() is TagKey<*>) {
-            return has(part.get() as TagKey<Item>)
-        }
-
-        if (part.get() is Ingredient) {
-            val itemLikes = Arrays.stream((part.get() as Ingredient).getItems()).map { obj: ItemStack -> obj.item }
-
-            return inventoryTrigger(ItemPredicate.Builder.item().of().build())
-        }
-
-        throw IllegalArgumentException("Invalid type: " + part.get()!!.javaClass)
-    }
-
-    fun getHasName(part: RecipePart<*>): String {
-        if (part.get() is ItemLike) {
-            return Companion.getHasName(part.get() as ItemLike)
-        }
-
-        if (part.get() is TagKey<*>) {
-            return "has_" + (part.get() as TagKey<*>).location().path
-        }
-
-        if (part.get() is Ingredient) {
-            return "has_item"
-        }
-
-        throw IllegalArgumentException("Invalid type: " + part.get()!!.javaClass)
+    fun getHasName(part: DataForgeRecipePart) = when (part) {
+        is ItemLike -> Companion.getHasName(part)
+        is TagKey<*> -> "has_${part.location().path}"
+        is Ingredient -> "has_item"
+        else -> throw IllegalArgumentException("Invalid type: ${part.javaClass}")
     }
 
     companion object {
@@ -311,9 +277,7 @@ abstract class RecipeSubProvider(private val provider: DataForgeRecipeProvider) 
             )
         }
 
-        protected fun getHasName(itemLike: ItemLike): String {
-            return "has_" + getName(itemLike)
-        }
+        protected fun getHasName(itemLike: ItemLike) = "has_${getName(itemLike)}"
     }
 }
 

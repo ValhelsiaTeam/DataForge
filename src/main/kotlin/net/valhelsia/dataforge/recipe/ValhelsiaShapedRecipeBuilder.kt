@@ -10,10 +10,6 @@ import net.minecraft.world.level.ItemLike
 
 data class ValhelsiaShapedRecipeBuilder(val builder: ShapedRecipeBuilder) {
     fun unlockedBy(provider: RecipeSubProvider, part: DataForgeRecipePart): ValhelsiaShapedRecipeBuilder {
-        return this.unlockedBy(provider, RecipePart.of(part))
-    }
-
-    fun unlockedBy(provider: RecipeSubProvider, part: RecipePart<*>): ValhelsiaShapedRecipeBuilder {
         builder.unlockedBy(provider.getHasName(part), provider.has(part))
 
         return this
