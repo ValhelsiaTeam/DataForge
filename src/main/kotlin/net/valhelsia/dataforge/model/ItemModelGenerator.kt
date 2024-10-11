@@ -12,25 +12,29 @@ import net.minecraft.data.models.model.ModelTemplates
 import net.minecraft.data.models.model.TextureMapping
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.Item
-import net.minecraft.world.level.block.Block
 
 abstract class ItemModelGenerator(defaultGenerators: ItemModelGenerators) {
     val output = defaultGenerators.output
 
     abstract fun generate()
 
-    fun generateFlatItem(
+    fun generateBatch(
         vararg items: Holder<out Item>,
         template: ModelTemplate = ModelTemplates.FLAT_ITEM,
         folder: String? = null,
         suffix: String = "",
-    ) = items.forEach {
-        template.create(
-            it.getModelLocation(suffix),
-            TextureMapping.layer0(getItemTexture(it, folder, suffix)),
-            output
-        )
-    }
+    ) = items.forEach { generateItem(it, template, folder, suffix) }
+
+    fun generateItem(
+        item: Holder<out Item>,
+        template: ModelTemplate = ModelTemplates.FLAT_ITEM,
+        folder: String? = null,
+        suffix: String = "",
+    ) = template.create(
+        item.getModelLocation(suffix),
+        TextureMapping.layer0(getItemTexture(item, folder, suffix)),
+        output
+    )
 
     fun generateWithOverrides(
         item: Holder<out Item>,
