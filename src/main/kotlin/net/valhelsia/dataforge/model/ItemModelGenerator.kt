@@ -53,9 +53,6 @@ abstract class ItemModelGenerator(defaultGenerators: ItemModelGenerators) {
         }
     )
 
-    fun Holder<out Block>.getModelLocation(suffix: String = "") =
-        ModelLocationUtils.getModelLocation(this.value(), suffix)
-
     fun Holder<out Item>.getModelLocation(suffix: String = "") =
         ModelLocationUtils.getModelLocation(this.value(), suffix)
 
