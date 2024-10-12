@@ -30,10 +30,9 @@ abstract class ItemModelGenerator(defaultGenerators: ItemModelGenerators) {
         template: ModelTemplate = ModelTemplates.FLAT_ITEM,
         folder: String? = null,
         suffix: String = "",
-    ) = template.create(
+    ) = template.createModel(
         item.getModelLocation(suffix),
         TextureMapping.layer0(getItemTexture(item, folder, suffix)),
-        output
     )
 
     fun generateWithOverrides(
@@ -42,10 +41,9 @@ abstract class ItemModelGenerator(defaultGenerators: ItemModelGenerators) {
         folder: String? = null,
         suffix: String = "",
         vararg overrides: ModelPredicate,
-    ) = template.create(
+    ) = template.createModel(
         item.getModelLocation(suffix),
         TextureMapping.layer0(getItemTexture(item, folder, suffix)),
-        output,
         ModelTemplate.JsonFactory { modelLocation, map ->
             val jsonObject = ModelTemplates.TWO_LAYERED_ITEM.createBaseTemplate(modelLocation, map)
 
@@ -66,11 +64,6 @@ abstract class ItemModelGenerator(defaultGenerators: ItemModelGenerators) {
         suffix: String = ""
     ) = BuiltInRegistries.ITEM.getKey(item.value())
         .withPath { "item/${if (folder != null) "$folder/" else ""}$it$suffix" }
-
-    fun ModelTemplate.create(
-        modelLocation: ResourceLocation,
-        textureMapping: TextureMapping
-    ) = this.create(modelLocation, textureMapping, output)
 
     data class ModelPredicate(val modelLocation: ResourceLocation, val properties: List<ModelProperty>) {
 
