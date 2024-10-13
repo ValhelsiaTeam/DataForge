@@ -12,6 +12,7 @@ import net.minecraft.data.models.model.ModelTemplates
 import net.minecraft.data.models.model.TextureMapping
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.Item
+import net.minecraft.world.level.block.Block
 
 abstract class ItemModelGenerator(defaultGenerators: ItemModelGenerators) {
     val output = defaultGenerators.output
@@ -55,6 +56,15 @@ abstract class ItemModelGenerator(defaultGenerators: ItemModelGenerators) {
         }
     )
 
+    fun generateFlatBlockItem(
+        block: Holder<out Block>,
+        folder: String? = null,
+        suffix: String = "",
+    ) = ModelTemplates.FLAT_ITEM.createModel(
+        ModelLocationUtils.getModelLocation(block.value(), suffix),
+        TextureMapping.layer0(getItemTexture(block, folder, suffix)),
+    )
+
     fun Holder<out Item>.getModelLocation(suffix: String = "") =
         ModelLocationUtils.getModelLocation(this.value(), suffix)
 
@@ -63,6 +73,13 @@ abstract class ItemModelGenerator(defaultGenerators: ItemModelGenerators) {
         folder: String? = null,
         suffix: String = ""
     ) = BuiltInRegistries.ITEM.getKey(item.value())
+        .withPath { "item/${if (folder != null) "$folder/" else ""}$it$suffix" }
+
+    private fun getItemTexture(
+        block: Holder<out Block>,
+        folder: String? = null,
+        suffix: String = ""
+    ) = BuiltInRegistries.ITEM.getKey(block.value().asItem())
         .withPath { "item/${if (folder != null) "$folder/" else ""}$it$suffix" }
 
     data class ModelPredicate(val modelLocation: ResourceLocation, val properties: List<ModelProperty>) {
