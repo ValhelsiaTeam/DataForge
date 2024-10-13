@@ -62,7 +62,7 @@ abstract class ItemModelGenerator(defaultGenerators: ItemModelGenerators) {
         suffix: String = "",
     ) = ModelTemplates.FLAT_ITEM.createModel(
         ModelLocationUtils.getModelLocation(block.value(), suffix),
-        TextureMapping.layer0(getItemTexture(block, folder, suffix)),
+        TextureMapping.layer0(getBlockItemTexture(block, folder, suffix)),
     )
 
     fun Holder<out Item>.getModelLocation(suffix: String = "") =
@@ -75,7 +75,7 @@ abstract class ItemModelGenerator(defaultGenerators: ItemModelGenerators) {
     ) = BuiltInRegistries.ITEM.getKey(item.value())
         .withPath { "item/${if (folder != null) "$folder/" else ""}$it$suffix" }
 
-    private fun getItemTexture(
+    private fun getBlockItemTexture(
         block: Holder<out Block>,
         folder: String? = null,
         suffix: String = ""
