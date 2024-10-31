@@ -7,7 +7,7 @@ plugins {
     id("eclipse")
     id("idea")
     id("maven-publish")
-    id("net.neoforged.moddev") version "2.0.36-beta"
+    id("net.neoforged.moddev") version "2.0.42-beta"
 }
 
 group = "net.valhelsia"
