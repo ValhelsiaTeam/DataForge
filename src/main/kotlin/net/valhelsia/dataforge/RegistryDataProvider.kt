@@ -1,4 +1,7 @@
 package net.valhelsia.dataforge
 
-class RegistryDataProvider<T> {
+import net.minecraft.data.worldgen.BootstrapContext
+
+interface RegistryDataProvider<T> {
+    fun bootstrap(context: BootstrapContext<T>)
 }

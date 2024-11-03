@@ -3,7 +3,6 @@ package net.valhelsia.dataforge
 import net.minecraft.core.Registry
 import net.minecraft.core.RegistrySetBuilder
 import net.minecraft.data.DataProvider
-import net.minecraft.data.worldgen.BootstrapContext
 import net.minecraft.resources.ResourceKey
 
 abstract class DataCollector {
@@ -21,10 +20,10 @@ abstract class DataCollector {
 
     fun <T> addRegistryProvider(
         key: ResourceKey<out Registry<T>>,
-        vararg providers: (BootstrapContext<T>) -> RegistryDataProvider<T>
+        vararg providers: RegistryDataProvider<T>
     ) {
         println("Adding registry provider...")
 
-        providers.forEach { registrySetBuilder.add(key) { context -> it(context) } }
+        registrySetBuilder.add(key) { context -> providers.forEach { it.bootstrap(context) } }
     }
 }
