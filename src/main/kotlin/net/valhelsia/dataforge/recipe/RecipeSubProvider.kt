@@ -21,7 +21,11 @@ abstract class RecipeSubProvider {
     internal fun registerRecipes(recipeOutput: RecipeOutput, lookupProvider: HolderLookup.Provider) {
         this.recipeOutput = recipeOutput
 
-        this.registerRecipes(lookupProvider)
+        try {
+            this.registerRecipes(lookupProvider)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     abstract fun registerRecipes(lookupProvider: HolderLookup.Provider)
