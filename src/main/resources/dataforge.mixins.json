@@ -6,6 +6,7 @@
   "mixins": [
     "IngredientMixin",
     "ItemLikeMixin",
+    "ModelTemplateAccessor",
     "ModelProviderMixin",
     "TagKeyMixin"
   ],

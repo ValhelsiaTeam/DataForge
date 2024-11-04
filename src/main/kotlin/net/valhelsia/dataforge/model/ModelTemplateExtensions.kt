@@ -6,6 +6,7 @@ import net.minecraft.data.models.model.TextureMapping
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.block.Block
 import net.valhelsia.dataforge.DataForge
+import net.valhelsia.dataforge.mixin.ModelTemplateAccessor
 
 private val defaultJsonFactory = { template: ModelTemplate ->
     ModelTemplate.JsonFactory { modelLocation, map ->
@@ -47,7 +48,7 @@ fun ModelTemplate.createModel(
     suffix: String = "",
     jsonFactory: ModelTemplate.JsonFactory = defaultJsonFactory(this)
 ) = createModel(
-    ModelLocationUtils.getModelLocation(block, suffix + this.suffix.orElse("")),
+    ModelLocationUtils.getModelLocation(block, suffix + (this as ModelTemplateAccessor).suffix.orElse("")),
     textureMapping,
     jsonFactory
 )
