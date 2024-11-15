@@ -10,7 +10,8 @@ abstract class DataCollector {
     internal val providers = mutableMapOf<DataTarget, MutableList<DataProvider>>()
     internal val registrySetBuilder = RegistrySetBuilder()
 
-    abstract fun collectData(context: DataProviderContext)
+    abstract fun collectProviders(context: DataProviderContext)
+    abstract fun collectRegistryProviders()
 
     fun addProvider(target: DataTarget, provider: DataProvider) {
         println("Adding provider...")

@@ -1,8 +1,10 @@
 package net.valhelsia.dataforge
 
+import net.minecraft.core.HolderLookup
 import net.neoforged.bus.api.SubscribeEvent
 import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider
 import net.neoforged.neoforge.data.event.GatherDataEvent
+import java.util.concurrent.CompletableFuture
 
 internal object DataGenerator {
 
@@ -13,28 +15,29 @@ internal object DataGenerator {
         DataForge.modId = event.modContainer.modId
 
         val collector = DataForge.collector ?: return
-        val context = event.createContext()
-        collector.collectData(context)
+
+        collector.collectRegistryProviders()
+
+        val dataProvider = DatapackBuiltinEntriesProvider(
+            event.generator.packOutput,
+            event.lookupProvider,
+            collector.registrySetBuilder,
+            setOf(DataForge.modId)
+        )
+
+        event.generator.addProvider(DataTarget.SERVER.isEnabled(event), dataProvider)
+
+        collector.collectProviders(event.createContext(dataProvider.registryProvider))
 
         collector.providers
             .filterKeys { it.isEnabled(event) }
             .flatMap { it.value }
             .forEach { event.generator.addProvider(true, it) }
-
-        event.generator.addProvider(
-            DataTarget.SERVER.isEnabled(event),
-            DatapackBuiltinEntriesProvider(
-                context.packOutput,
-                context.lookupProvider,
-                collector.registrySetBuilder,
-                setOf(DataForge.modId)
-            )
-        )
     }
 
-    private fun GatherDataEvent.createContext() = DataProviderContext(
+    private fun GatherDataEvent.createContext(lookupProvider: CompletableFuture<HolderLookup.Provider>) = DataProviderContext(
         this.generator.packOutput,
-        this.lookupProvider,
+        lookupProvider,
         this.existingFileHelper
     )
 }
