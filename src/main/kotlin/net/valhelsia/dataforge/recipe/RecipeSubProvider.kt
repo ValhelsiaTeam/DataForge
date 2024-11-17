@@ -51,12 +51,12 @@ abstract class RecipeSubProvider {
 
     fun simple2x2(category: RecipeCategory, result: ItemLike, item: DataForgeRecipePart) =
         this.shaped(category, result) {
-            it.pattern("##", "##").define('#', item).unlockedBy(item)
+            it.pattern("##", "##").define('#' to item).unlockedBy(item)
         }
 
     fun singleRow(category: RecipeCategory, result: ItemLike, item: DataForgeRecipePart) =
         this.shaped(category, result) {
-            it.pattern("###").define('#', item).unlockedBy(item)
+            it.pattern("###").define('#' to item).unlockedBy(item)
         }
 
     fun surroundingItem(
@@ -66,12 +66,12 @@ abstract class RecipeSubProvider {
         outside: DataForgeRecipePart,
         amount: Int
     ) = this.shaped(category, result, amount) {
-        it.pattern("###", "#X#", "###").define('#', outside).define('X', middle).unlockedBy(middle, outside)
+        it.pattern("###", "#X#", "###").define('#' to outside, 'X' to middle).unlockedBy(middle, outside)
     }
 
     fun wood(result: ItemLike, log: DataForgeRecipePart) =
         this.shaped(RecipeCategory.BUILDING_BLOCKS, result, 3) {
-            it.group("bark").pattern("##", "##").define('#', log).unlockedBy(log)
+            it.group("bark").pattern("##", "##").define('#' to log).unlockedBy(log)
         }
 
     fun planks(result: ItemLike, log: TagKey<Item>, count: Int = 4) =
@@ -81,110 +81,108 @@ abstract class RecipeSubProvider {
 
     fun slab(result: ItemLike, planks: DataForgeRecipePart) =
         this.shaped(RecipeCategory.BUILDING_BLOCKS, result, 6) {
-            it.pattern("###").define('#', planks).unlockedBy(planks)
+            it.pattern("###").define('#' to planks).unlockedBy(planks)
         }
 
     fun woodenSlab(result: ItemLike, planks: DataForgeRecipePart) =
         this.shaped(RecipeCategory.BUILDING_BLOCKS, result, 6) {
-            it.group("wooden_slab").pattern("###").define('#', planks).unlockedBy(planks)
+            it.group("wooden_slab").pattern("###").define('#' to planks).unlockedBy(planks)
         }
 
     fun stairs(result: ItemLike, planks: DataForgeRecipePart) =
         this.shaped(RecipeCategory.BUILDING_BLOCKS, result, 4) {
-            it.pattern("#  ", "## ", "###").define('#', planks).unlockedBy(planks)
+            it.pattern("#  ", "## ", "###").define('#' to planks).unlockedBy(planks)
         }
 
     fun sword(result: ItemLike, material: DataForgeRecipePart) =
         this.shaped(RecipeCategory.COMBAT, result) {
-            it.pattern("#", "#", "X").define('#', material).define('X', Tags.Items.RODS_WOODEN).unlockedBy(material)
+            it.pattern("#", "#", "X").define('#' to material, 'X' to Tags.Items.RODS_WOODEN).unlockedBy(material)
         }
 
     fun shovel(result: ItemLike, material: DataForgeRecipePart) =
         this.shaped(RecipeCategory.TOOLS, result) {
-            it.pattern("#", "X", "X").define('#', material).define('X', Tags.Items.RODS_WOODEN).unlockedBy(material)
+            it.pattern("#", "X", "X").define('#' to material, 'X' to Tags.Items.RODS_WOODEN).unlockedBy(material)
         }
 
     fun pickaxe(result: ItemLike, material: DataForgeRecipePart) =
         this.shaped(RecipeCategory.TOOLS, result) {
-            it.pattern("###", " X ", " X ").define('#', material).define('X', Tags.Items.RODS_WOODEN)
-                .unlockedBy(material)
+            it.pattern("###", " X ", " X ").define('#' to material, 'X' to Tags.Items.RODS_WOODEN).unlockedBy(material)
         }
 
     fun axe(result: ItemLike, material: DataForgeRecipePart) =
         this.shaped(RecipeCategory.TOOLS, result) {
-            it.pattern("##", "#X", " X").define('#', material).define('X', Tags.Items.RODS_WOODEN)
-                .unlockedBy(material)
+            it.pattern("##", "#X", " X").define('#' to material, 'X' to Tags.Items.RODS_WOODEN).unlockedBy(material)
         }
 
     fun hoe(result: ItemLike, material: DataForgeRecipePart) =
         this.shaped(RecipeCategory.TOOLS, result) {
-            it.pattern("##", " X", " X").define('#', material).define('X', Tags.Items.RODS_WOODEN).unlockedBy(material)
+            it.pattern("##", " X", " X").define('#' to material, 'X' to Tags.Items.RODS_WOODEN).unlockedBy(material)
         }
 
     fun helmet(result: ItemLike, material: DataForgeRecipePart) =
         this.shaped(RecipeCategory.COMBAT, result) {
-            it.pattern("###", "# #").define('#', material).unlockedBy(material)
+            it.pattern("###", "# #").define('#' to material).unlockedBy(material)
         }
 
     fun chestplate(result: ItemLike, material: DataForgeRecipePart) =
         this.shaped(RecipeCategory.COMBAT, result) {
-            it.pattern("# #", "###", "###").define('#', material).unlockedBy(material)
+            it.pattern("# #", "###", "###").define('#' to material).unlockedBy(material)
         }
 
     fun leggings(result: ItemLike, material: DataForgeRecipePart) {
         this.shaped(RecipeCategory.COMBAT, result) {
-            it.pattern("###", "# #", "# #").define('#', material).unlockedBy(material)
+            it.pattern("###", "# #", "# #").define('#' to material).unlockedBy(material)
         }
     }
 
     fun boots(result: ItemLike, material: DataForgeRecipePart) =
         this.shaped(RecipeCategory.COMBAT, result) {
-            it.pattern("# #", "# #").define('#', material).unlockedBy(material)
+            it.pattern("# #", "# #").define('#' to material).unlockedBy(material)
         }
 
     fun boat(result: ItemLike, material: DataForgeRecipePart) =
         this.shaped(RecipeCategory.TRANSPORTATION, result) {
-            it.pattern("# #", "###").define('#', material).unlockedBy(material)
+            it.pattern("# #", "###").define('#' to material).unlockedBy(material)
         }
 
     fun chestBoat(result: ItemLike, boat: ItemLike) =
         this.shapeless(RecipeCategory.TRANSPORTATION, result) {
-            it.requires(boat).requires(Tags.Items.CHESTS_WOODEN).unlockedBy(boat, Tags.Items.CHESTS_WOODEN)
+            it.requires(boat, Tags.Items.CHESTS_WOODEN).unlockedBy(boat, Tags.Items.CHESTS_WOODEN)
         }
 
     fun glassPane(result: ItemLike, glass: DataForgeRecipePart) =
         this.shaped(RecipeCategory.BUILDING_BLOCKS, result, 16) {
-            it.pattern("###", "###").define('#', glass).unlockedBy(glass)
+            it.pattern("###", "###").define('#' to glass).unlockedBy(glass)
         }
 
     fun woodenStairs(result: ItemLike, planks: DataForgeRecipePart) =
         this.shaped(RecipeCategory.BUILDING_BLOCKS, result, 4) {
-            it.group("wooden_stairs").pattern("#  ", "## ", "###").define('#', planks).unlockedBy(planks)
+            it.group("wooden_stairs").pattern("#  ", "## ", "###").define('#' to planks).unlockedBy(planks)
         }
 
     fun sign(result: ItemLike, planks: DataForgeRecipePart) =
         this.shaped(RecipeCategory.DECORATIONS, result, 3) {
-            it.pattern("###", "###", " X ").define('#', planks).define('X', Tags.Items.RODS_WOODEN).unlockedBy(planks)
+            it.pattern("###", "###", " X ").define('#' to planks, 'X' to Tags.Items.RODS_WOODEN).unlockedBy(planks)
         }
 
     fun door(result: ItemLike, planks: DataForgeRecipePart) =
         this.shaped(RecipeCategory.BUILDING_BLOCKS, result, 3) {
-            it.pattern("##", "##", "##").define('#', planks).unlockedBy(planks)
+            it.pattern("##", "##", "##").define('#' to planks).unlockedBy(planks)
         }
 
     fun trapdoor(result: ItemLike, planks: DataForgeRecipePart) =
         this.shaped(RecipeCategory.BUILDING_BLOCKS, result, 2) {
-            it.pattern("###", "###").define('#', planks).unlockedBy(planks)
+            it.pattern("###", "###").define('#' to planks).unlockedBy(planks)
         }
 
     fun fence(result: ItemLike, planks: DataForgeRecipePart) =
         this.shaped(RecipeCategory.BUILDING_BLOCKS, result, 3) {
-            it.pattern("#X#", "#X#").define('#', planks).define('X', Tags.Items.RODS_WOODEN).unlockedBy(planks)
+            it.pattern("#X#", "#X#").define('#' to planks, 'X' to Tags.Items.RODS_WOODEN).unlockedBy(planks)
         }
 
     fun fenceGate(result: ItemLike, planks: DataForgeRecipePart) =
         this.shaped(RecipeCategory.BUILDING_BLOCKS, result) {
-            it.pattern("#X#", "#X#").define('X', planks).define('#', Tags.Items.RODS_WOODEN).unlockedBy(planks)
+            it.pattern("#X#", "#X#").define('X' to planks, '#' to Tags.Items.RODS_WOODEN).unlockedBy(planks)
         }
 
     fun button(result: ItemLike, planks: ItemLike) =
@@ -194,12 +192,12 @@ abstract class RecipeSubProvider {
 
     fun pressurePlate(result: ItemLike, planks: DataForgeRecipePart) =
         this.shaped(RecipeCategory.REDSTONE, result) {
-            it.pattern("##").define('#', planks).unlockedBy(planks)
+            it.pattern("##").define('#' to planks).unlockedBy(planks)
         }
 
     fun carpet(result: ItemLike, material: DataForgeRecipePart) =
         this.shaped(RecipeCategory.DECORATIONS, result, 3) {
-            it.pattern("##").define('#', material).unlockedBy(material)
+            it.pattern("##").define('#' to material).unlockedBy(material)
         }
 
     fun shaped(
