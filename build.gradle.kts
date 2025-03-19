@@ -2,7 +2,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 plugins {
-    kotlin("jvm") version "2.0.0"
+    kotlin("jvm") version "2.1.10"
     id("java-library")
     id("eclipse")
     id("idea")
