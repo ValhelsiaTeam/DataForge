@@ -1,6 +1,7 @@
 package net.valhelsia.dataforge.mixin;
 
 import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -23,7 +24,7 @@ public class TagKeyMixin implements DataForgeRecipePart {
 
     @NotNull
     @Override
-    public ItemPredicate createPredicate() {
-        return ItemPredicate.Builder.item().of((TagKey<Item>) (Object) this).build();
+    public ItemPredicate createPredicate(@NotNull HolderGetter<Item> itemGetter) {
+        return ItemPredicate.Builder.item().of(itemGetter, (TagKey<Item>) (Object) this).build();
     }
 }

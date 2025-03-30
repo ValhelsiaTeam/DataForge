@@ -1,34 +1,30 @@
 package net.valhelsia.dataforge.recipe
 
 import net.minecraft.advancements.CriteriaTriggers
+import net.minecraft.advancements.Criterion
 import net.minecraft.advancements.critereon.InventoryChangeTrigger
 import net.minecraft.advancements.critereon.ItemPredicate
+import net.minecraft.core.HolderGetter
 import net.minecraft.core.HolderLookup
 import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.core.registries.Registries
 import net.minecraft.data.recipes.*
+import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.tags.TagKey
 import net.minecraft.world.item.Item
 import net.minecraft.world.level.ItemLike
 import net.neoforged.neoforge.common.Tags
 import net.valhelsia.dataforge.DataForge
-import java.util.Optional
+import java.util.*
 
-abstract class RecipeSubProvider {
+abstract class RecipeSubProvider(
+    val registries: HolderLookup.Provider,
+    val recipeOutput: RecipeOutput,
+) {
+    private val items: HolderGetter<Item> = registries.lookupOrThrow(Registries.ITEM)
 
-    private lateinit var recipeOutput: RecipeOutput
-
-    internal fun registerRecipes(recipeOutput: RecipeOutput, lookupProvider: HolderLookup.Provider) {
-        this.recipeOutput = recipeOutput
-
-        try {
-            this.registerRecipes(lookupProvider)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-
-    abstract fun registerRecipes(lookupProvider: HolderLookup.Provider)
+    abstract fun buildRecipes()
 
     fun add(builder: RecipeBuilder, path: String? = null) {
         val id = when {
@@ -36,7 +32,7 @@ abstract class RecipeSubProvider {
             else -> ResourceLocation.fromNamespaceAndPath(DataForge.modId, path)
         }
 
-        builder.save(recipeOutput, id)
+        builder.save(recipeOutput, ResourceKey.create(Registries.RECIPE, id))
     }
 
     fun storageRecipe(item: ItemLike, block: ItemLike, groupItem: String? = null, groupBlock: String? = null) {
@@ -206,7 +202,7 @@ abstract class RecipeSubProvider {
         count: Int = 1,
         path: String? = null,
         transformer: ShapedRecipeTransformer,
-    ) = add(transformer(ShapedRecipeBuilder(category, result, count)), path)
+    ) = add(transformer(ShapedRecipeBuilder.shaped(items, category, result, count)), path)
 
     fun shapeless(
         category: RecipeCategory,
@@ -214,16 +210,25 @@ abstract class RecipeSubProvider {
         count: Int = 1,
         path: String? = null,
         transformer: ShapelessRecipeTransformer,
-    ) = add(transformer(ShapelessRecipeBuilder(category, result, count)), path)
+    ) = add(transformer(ShapelessRecipeBuilder.shapeless(items, category, result, count)), path)
+
+    fun <T : RecipeBuilder> T.unlockedBy(vararg parts: DataForgeRecipePart) = apply {
+        parts.forEach { unlockedBy(it) }
+    }
+
+    fun <T : RecipeBuilder> T.unlockedBy(part: DataForgeRecipePart) = apply {
+        this.unlockedBy(part.getHasName(), inventoryTrigger(part.createPredicate(items)))
+    }
 
     companion object {
-        fun inventoryTrigger(vararg predicates: ItemPredicate) = CriteriaTriggers.INVENTORY_CHANGED.createCriterion(
-            InventoryChangeTrigger.TriggerInstance(
-                Optional.empty(),
-                InventoryChangeTrigger.TriggerInstance.Slots.ANY,
-                listOf(*predicates)
+        fun inventoryTrigger(vararg predicates: ItemPredicate): Criterion<InventoryChangeTrigger.TriggerInstance> =
+            CriteriaTriggers.INVENTORY_CHANGED.createCriterion(
+                InventoryChangeTrigger.TriggerInstance(
+                    Optional.empty(),
+                    InventoryChangeTrigger.TriggerInstance.Slots.ANY,
+                    listOf(*predicates)
+                )
             )
-        )
     }
 }
 

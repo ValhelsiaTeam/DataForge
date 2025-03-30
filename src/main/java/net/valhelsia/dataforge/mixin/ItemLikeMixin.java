@@ -1,7 +1,9 @@
 package net.valhelsia.dataforge.mixin;
 
 import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 import net.valhelsia.dataforge.recipe.DataForgeRecipePart;
 import org.jetbrains.annotations.NotNull;
@@ -17,7 +19,7 @@ public interface ItemLikeMixin extends DataForgeRecipePart {
     }
 
     @Override
-    default ItemPredicate createPredicate() {
-        return ItemPredicate.Builder.item().of((ItemLike) this).build();
+    default ItemPredicate createPredicate(@NotNull HolderGetter<Item> itemGetter) {
+        return ItemPredicate.Builder.item().of(itemGetter, (ItemLike) this).build();
     }
 }

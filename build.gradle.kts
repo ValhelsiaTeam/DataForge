@@ -7,11 +7,11 @@ plugins {
     id("eclipse")
     id("idea")
     id("maven-publish")
-    id("net.neoforged.moddev") version "2.0.78"
+    id("net.neoforged.moddev") version "2.0.80"
 }
 
 group = "net.valhelsia"
-version = "0.1.16"
+version = "1.21.3-0.1.0"
 
 repositories {
     mavenCentral()
