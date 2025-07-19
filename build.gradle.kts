@@ -11,7 +11,7 @@ plugins {
 }
 
 group = "net.valhelsia"
-version = "1.21.3-0.1.0"
+version = "1.21.3-0.1.2"
 
 repositories {
     mavenCentral()
@@ -23,6 +23,10 @@ neoForge {
     interfaceInjectionData {
         from("interfaces.json")
         publish(file("interfaces.json"))
+    }
+
+    accessTransformers {
+        publish(file("src/main/resources/META-INF/accesstransformer.cfg"))
     }
 }
 
