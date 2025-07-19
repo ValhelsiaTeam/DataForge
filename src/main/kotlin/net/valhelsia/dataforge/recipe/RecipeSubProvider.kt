@@ -22,7 +22,7 @@ abstract class RecipeSubProvider(
     val registries: HolderLookup.Provider,
     val recipeOutput: RecipeOutput,
 ) {
-    private val items: HolderGetter<Item> = registries.lookupOrThrow(Registries.ITEM)
+    val items: HolderGetter<Item> = registries.lookupOrThrow(Registries.ITEM)
 
     abstract fun buildRecipes()
 
