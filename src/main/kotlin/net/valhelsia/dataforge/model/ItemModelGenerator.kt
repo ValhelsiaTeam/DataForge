@@ -44,17 +44,16 @@ abstract class ItemModelGenerator(defaultGenerators: ItemModelGenerators) {
         vararg overrides: ModelPredicate,
     ) = template.createModel(
         item.getModelLocation(suffix),
-        TextureMapping.layer0(getItemTexture(item, folder, suffix)),
-        ModelTemplate.JsonFactory { modelLocation, map ->
-            val jsonObject = ModelTemplates.TWO_LAYERED_ITEM.createBaseTemplate(modelLocation, map)
+        TextureMapping.layer0(getItemTexture(item, folder, suffix))
+    ) { modelLocation, map ->
+        val jsonObject = ModelTemplates.TWO_LAYERED_ITEM.createBaseTemplate(modelLocation, map)
 
-            ModelPredicate.CODEC.listOf().encodeStart(JsonOps.INSTANCE, overrides.toList()).ifSuccess {
-                jsonObject.add("overrides", it)
-            }
-
-            jsonObject
+        ModelPredicate.CODEC.listOf().encodeStart(JsonOps.INSTANCE, overrides.toList()).ifSuccess {
+            jsonObject.add("overrides", it)
         }
-    )
+
+        jsonObject
+    }
 
     fun generateFlatBlockItem(
         block: Holder<out Block>,
