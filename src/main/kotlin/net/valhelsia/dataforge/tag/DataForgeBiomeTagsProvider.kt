@@ -4,9 +4,8 @@ import net.minecraft.data.tags.BiomeTagsProvider
 import net.valhelsia.dataforge.DataForge
 import net.valhelsia.dataforge.DataProviderContext
 
-abstract class DataForgeBiomeTagsProvider(context: DataProviderContext) : BiomeTagsProvider(
+abstract class DataForgeBiomeTagsProvider(context: DataProviderContext.Server) : BiomeTagsProvider(
     context.packOutput,
     context.lookupProvider,
     DataForge.modId,
-    context.fileHelper
 )

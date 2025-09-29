@@ -2,11 +2,19 @@ package net.valhelsia.dataforge
 
 import net.minecraft.core.HolderLookup
 import net.minecraft.data.PackOutput
-import net.neoforged.neoforge.common.data.ExistingFileHelper
 import java.util.concurrent.CompletableFuture
 
-data class DataProviderContext(
+sealed class DataProviderContext(
     val packOutput: PackOutput,
-    val lookupProvider: CompletableFuture<HolderLookup.Provider>,
-    val fileHelper: ExistingFileHelper
-)
+) {
+    class Client(
+        packOutput: PackOutput
+    ) : DataProviderContext(packOutput)
+
+    class Server(
+        packOutput: PackOutput,
+        val lookupProvider: CompletableFuture<HolderLookup.Provider>
+    ) : DataProviderContext(
+        packOutput
+    )
+}

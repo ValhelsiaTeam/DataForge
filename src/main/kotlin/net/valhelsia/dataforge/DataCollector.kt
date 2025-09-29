@@ -7,16 +7,20 @@ import net.minecraft.resources.ResourceKey
 
 abstract class DataCollector {
 
-    internal val providers = mutableMapOf<DataTarget, MutableList<DataProvider>>()
+    internal val clientProviders = mutableListOf<DataProvider>()
+    internal val serverProviders = mutableListOf<DataProvider>()
     internal val registrySetBuilder = RegistrySetBuilder()
 
-    abstract fun collectProviders(context: DataProviderContext)
+    abstract fun collectClientProviders(context: DataProviderContext.Client)
+    abstract fun collectServerProviders(context: DataProviderContext.Server)
     abstract fun collectRegistryProviders()
 
-    fun addProvider(target: DataTarget, provider: DataProvider) {
-        println("Adding provider...")
+    fun addClientProvider(provider: DataProvider) {
+        clientProviders.add(provider)
+    }
 
-        providers.getOrPut(target) { mutableListOf() }.add(provider)
+    fun addServerProvider(provider: DataProvider) {
+        serverProviders.add(provider)
     }
 
     fun <T> addRegistryProvider(

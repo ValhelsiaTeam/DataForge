@@ -17,13 +17,13 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @Mixin(Ingredient.class)
-public class IngredientMixin implements DataForgeRecipePart {
+public abstract class IngredientMixin implements DataForgeRecipePart {
 
     @Shadow
-    @Nullable
-    private List<Holder<Item>> items;
+    public abstract HolderSet<Item> getValues();
 
     @NotNull
     @Override
@@ -34,6 +34,6 @@ public class IngredientMixin implements DataForgeRecipePart {
     @NotNull
     @Override
     public ItemPredicate createPredicate(@NotNull HolderGetter<Item> itemGetter) {
-        return new ItemPredicate(Optional.of(HolderSet.direct(this.items != null ? this.items : List.of())), MinMaxBounds.Ints.ANY, DataComponentPredicate.EMPTY, Map.of());
+        return new ItemPredicate(Optional.of(this.getValues()), MinMaxBounds.Ints.ANY, DataComponentPredicate.EMPTY, Map.of());
     }
 }

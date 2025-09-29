@@ -11,7 +11,7 @@ plugins {
 }
 
 group = "net.valhelsia"
-version = "1.21.3-0.1.6"
+version = "1.21.4-0.1.2"
 
 repositories {
     mavenCentral()

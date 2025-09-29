@@ -9,14 +9,15 @@ import java.util.concurrent.CompletableFuture
 internal object DataGenerator {
 
     @SubscribeEvent
-    fun gatherData(event: GatherDataEvent) {
-        println("Gathering data...")
-
+    fun gatherClientData(event: GatherDataEvent.Client) {
         DataForge.modId = event.modContainer.modId
 
         val collector = DataForge.collector ?: return
 
+        collector.collectClientProviders(event.createContext())
         collector.collectRegistryProviders()
+
+        collector.clientProviders.forEach { event.generator.addProvider(true, it) }
 
         val dataProvider = DatapackBuiltinEntriesProvider(
             event.generator.packOutput,
@@ -25,19 +26,15 @@ internal object DataGenerator {
             setOf(DataForge.modId)
         )
 
-        event.generator.addProvider(DataTarget.SERVER.isEnabled(event), dataProvider)
+        collector.collectServerProviders(event.createContext(dataProvider.registryProvider))
 
-        collector.collectProviders(event.createContext(dataProvider.registryProvider))
+        event.generator.addProvider(true, dataProvider)
 
-        collector.providers
-            .filterKeys { it.isEnabled(event) }
-            .flatMap { it.value }
-            .forEach { event.generator.addProvider(true, it) }
+        collector.serverProviders.forEach { event.generator.addProvider(true, it) }
     }
 
-    private fun GatherDataEvent.createContext(lookupProvider: CompletableFuture<HolderLookup.Provider>) = DataProviderContext(
-        this.generator.packOutput,
-        lookupProvider,
-        this.existingFileHelper
-    )
+    private fun GatherDataEvent.Client.createContext() = DataProviderContext.Client(this.generator.packOutput)
+
+    private fun GatherDataEvent.Client.createContext(lookupProvider: CompletableFuture<HolderLookup.Provider>) =
+        DataProviderContext.Server(this.generator.packOutput, lookupProvider)
 }

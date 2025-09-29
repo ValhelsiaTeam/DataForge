@@ -1,8 +1,8 @@
 package net.valhelsia.dataforge.model
 
+import net.minecraft.client.data.models.BlockModelGenerators
+import net.minecraft.client.data.models.model.ModelLocationUtils
 import net.minecraft.core.Holder
-import net.minecraft.data.models.BlockModelGenerators
-import net.minecraft.data.models.model.ModelLocationUtils
 import net.minecraft.world.level.block.Block
 
 abstract class BlockModelGenerator(defaultGenerators: BlockModelGenerators) {

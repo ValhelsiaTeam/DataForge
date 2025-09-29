@@ -1,21 +1,20 @@
 package net.valhelsia.dataforge.model
 
 import com.mojang.serialization.Codec
-import com.mojang.serialization.JsonOps
 import com.mojang.serialization.codecs.RecordCodecBuilder
+import net.minecraft.client.data.models.ItemModelGenerators
+import net.minecraft.client.data.models.model.ModelLocationUtils
+import net.minecraft.client.data.models.model.ModelTemplate
+import net.minecraft.client.data.models.model.ModelTemplates
+import net.minecraft.client.data.models.model.TextureMapping
 import net.minecraft.core.Holder
 import net.minecraft.core.registries.BuiltInRegistries
-import net.minecraft.data.models.ItemModelGenerators
-import net.minecraft.data.models.model.ModelLocationUtils
-import net.minecraft.data.models.model.ModelTemplate
-import net.minecraft.data.models.model.ModelTemplates
-import net.minecraft.data.models.model.TextureMapping
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.Item
 import net.minecraft.world.level.block.Block
 
 abstract class ItemModelGenerator(defaultGenerators: ItemModelGenerators) {
-    val output = defaultGenerators.output
+    val output = defaultGenerators.itemModelOutput
 
     abstract fun generate()
 
@@ -35,25 +34,6 @@ abstract class ItemModelGenerator(defaultGenerators: ItemModelGenerators) {
         item.getModelLocation(suffix),
         TextureMapping.layer0(getItemTexture(item, folder, suffix)),
     )
-
-    fun generateWithOverrides(
-        item: Holder<out Item>,
-        template: ModelTemplate = ModelTemplates.FLAT_ITEM,
-        folder: String? = null,
-        suffix: String = "",
-        vararg overrides: ModelPredicate,
-    ) = template.createModel(
-        item.getModelLocation(suffix),
-        TextureMapping.layer0(getItemTexture(item, folder, suffix))
-    ) { modelLocation, map ->
-        val jsonObject = ModelTemplates.TWO_LAYERED_ITEM.createBaseTemplate(modelLocation, map)
-
-        ModelPredicate.CODEC.listOf().encodeStart(JsonOps.INSTANCE, overrides.toList()).ifSuccess {
-            jsonObject.add("overrides", it)
-        }
-
-        jsonObject
-    }
 
     fun generateFlatBlockItem(
         block: Holder<out Block>,

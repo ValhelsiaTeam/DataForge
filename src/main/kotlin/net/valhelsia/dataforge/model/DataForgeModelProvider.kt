@@ -1,20 +1,23 @@
 package net.valhelsia.dataforge.model
 
-import net.minecraft.data.models.BlockModelGenerators
-import net.minecraft.data.models.ItemModelGenerators
-import net.minecraft.data.models.ModelProvider
-import net.minecraft.world.level.block.Block
+import net.minecraft.client.data.models.BlockModelGenerators
+import net.minecraft.client.data.models.ItemModelGenerators
+import net.minecraft.client.data.models.ModelProvider
 import net.valhelsia.dataforge.DataForge
 import net.valhelsia.dataforge.DataProviderContext
 
 class DataForgeModelProvider(
     context: DataProviderContext,
-    val blocks: Collection<() -> Block>,
     private val blockModelGenerator: ((BlockModelGenerators) -> BlockModelGenerator)?,
     private val itemModelGenerator: ((ItemModelGenerators) -> ItemModelGenerator)?
-) : ModelProvider(context.packOutput) {
+) : ModelProvider(context.packOutput, DataForge.modId) {
 
-    fun generateBlockStateModels(modelGenerators: BlockModelGenerators) {
+    override fun registerModels(blockModels: BlockModelGenerators, itemModels: ItemModelGenerators) {
+        generateBlockModels(blockModels)
+        generateItemModels(itemModels)
+    }
+
+    private fun generateBlockModels(modelGenerators: BlockModelGenerators) {
         DataForge.modelOutput = modelGenerators.modelOutput
 
         blockModelGenerator?.invoke(modelGenerators)?.generate()
@@ -22,8 +25,8 @@ class DataForgeModelProvider(
         DataForge.modelOutput = null
     }
 
-    fun generateItemModels(modelGenerators: ItemModelGenerators) {
-        DataForge.modelOutput = modelGenerators.output
+    private fun generateItemModels(modelGenerators: ItemModelGenerators) {
+        DataForge.modelOutput = modelGenerators.modelOutput
 
         itemModelGenerator?.invoke(modelGenerators)?.generate()
 

@@ -7,7 +7,7 @@ import net.valhelsia.dataforge.DataForge
 import net.valhelsia.dataforge.DataProviderContext
 
 class DataForgeRecipeRunner(
-    context: DataProviderContext,
+    context: DataProviderContext.Server,
     private vararg val subProviders: SubProviderFactory
 ) : RecipeProvider.Runner(context.packOutput, context.lookupProvider) {
 
