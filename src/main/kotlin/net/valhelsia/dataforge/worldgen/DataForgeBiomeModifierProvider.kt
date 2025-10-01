@@ -6,6 +6,7 @@ import net.minecraft.core.registries.Registries
 import net.minecraft.data.worldgen.BootstrapContext
 import net.minecraft.resources.ResourceKey
 import net.minecraft.tags.BiomeTags
+import net.minecraft.util.random.WeightedList
 import net.minecraft.world.level.biome.Biome
 import net.minecraft.world.level.biome.MobSpawnSettings.SpawnerData
 import net.minecraft.world.level.levelgen.GenerationStep
@@ -51,8 +52,8 @@ abstract class DataForgeBiomeModifierProvider : RegistryDataProvider<BiomeModifi
     fun BootstrapContext<BiomeModifier>.registerSpawn(
         key: ResourceKey<BiomeModifier>,
         biomes: HolderSet<Biome>,
-        vararg spawners: SpawnerData
+        spawners: WeightedList<SpawnerData>
     ) {
-        this.register(key, AddSpawnsBiomeModifier(biomes, listOf(*spawners)))
+        this.register(key, AddSpawnsBiomeModifier(biomes, spawners))
     }
 }
