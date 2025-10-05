@@ -21,10 +21,10 @@ import java.util.*
 abstract class RecipeSubProvider(
     val registries: HolderLookup.Provider,
     val recipeOutput: RecipeOutput,
-) {
+) : RecipeProvider(registries, recipeOutput) {
     val items: HolderGetter<Item> = registries.lookupOrThrow(Registries.ITEM)
 
-    abstract fun buildRecipes()
+    public abstract override fun buildRecipes()
 
     fun add(builder: RecipeBuilder, path: String? = null) {
         val id = when {
@@ -139,11 +139,6 @@ abstract class RecipeSubProvider(
     fun boat(result: ItemLike, material: DataForgeRecipePart) =
         this.shaped(RecipeCategory.TRANSPORTATION, result) {
             it.pattern("# #", "###").define('#' to material).unlockedBy(material)
-        }
-
-    fun chestBoat(result: ItemLike, boat: ItemLike) =
-        this.shapeless(RecipeCategory.TRANSPORTATION, result) {
-            it.requires(boat, Tags.Items.CHESTS_WOODEN).unlockedBy(boat, Tags.Items.CHESTS_WOODEN)
         }
 
     fun glassPane(result: ItemLike, glass: DataForgeRecipePart) =
