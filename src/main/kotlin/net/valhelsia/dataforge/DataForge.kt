@@ -2,7 +2,7 @@ package net.valhelsia.dataforge
 
 import net.minecraft.client.data.models.model.ModelInstance
 import net.minecraft.data.tags.TagsProvider.TagLookup
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.world.level.block.Block
 import net.neoforged.bus.api.IEventBus
 import java.util.concurrent.CompletableFuture
@@ -12,7 +12,7 @@ object DataForge {
 
     internal var collector: DataCollector? = null
     internal var blockTagLookup: CompletableFuture<TagLookup<Block>>? = null
-    internal var modelOutput: BiConsumer<ResourceLocation, ModelInstance>? = null
+    internal var modelOutput: BiConsumer<Identifier, ModelInstance>? = null
 
     internal lateinit var modId: String
 

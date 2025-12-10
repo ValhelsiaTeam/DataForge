@@ -1,8 +1,8 @@
 package net.valhelsia.dataforge.mixin;
 
-import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.advancements.criterion.ItemPredicate;
 import net.minecraft.core.HolderGetter;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.valhelsia.dataforge.recipe.DataForgeRecipePart;
@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.Shadow;
 @Mixin(TagKey.class)
 public class TagKeyMixin implements DataForgeRecipePart {
 
-    @Shadow @Final private ResourceLocation location;
+    @Shadow @Final private Identifier location;
 
     @NotNull
     @Override

@@ -23,7 +23,7 @@ abstract class DataCollector {
         serverProviders.add(provider)
     }
 
-    fun <T> addRegistryProvider(
+    fun <T : Any> addRegistryProvider(
         key: ResourceKey<out Registry<T>>,
         vararg providers: RegistryDataProvider<T>
     ) {

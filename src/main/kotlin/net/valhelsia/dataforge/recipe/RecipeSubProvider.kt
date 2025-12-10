@@ -2,15 +2,15 @@ package net.valhelsia.dataforge.recipe
 
 import net.minecraft.advancements.CriteriaTriggers
 import net.minecraft.advancements.Criterion
-import net.minecraft.advancements.critereon.InventoryChangeTrigger
-import net.minecraft.advancements.critereon.ItemPredicate
+import net.minecraft.advancements.criterion.InventoryChangeTrigger
+import net.minecraft.advancements.criterion.ItemPredicate
 import net.minecraft.core.HolderGetter
 import net.minecraft.core.HolderLookup
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
 import net.minecraft.data.recipes.*
+import net.minecraft.resources.Identifier
 import net.minecraft.resources.ResourceKey
-import net.minecraft.resources.ResourceLocation
 import net.minecraft.tags.TagKey
 import net.minecraft.world.item.Item
 import net.minecraft.world.level.ItemLike
@@ -29,7 +29,7 @@ abstract class RecipeSubProvider(
     fun add(builder: RecipeBuilder, path: String? = null) {
         val id = when {
             path == null -> RecipeBuilder.getDefaultRecipeId(builder.result)
-            else -> ResourceLocation.fromNamespaceAndPath(DataForge.modId, path)
+            else -> Identifier.fromNamespaceAndPath(DataForge.modId, path)
         }
 
         builder.save(recipeOutput, ResourceKey.create(Registries.RECIPE, id))

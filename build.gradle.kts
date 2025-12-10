@@ -1,5 +1,5 @@
 import java.text.SimpleDateFormat
-import java.util.Date
+import java.util.*
 
 plugins {
     kotlin("jvm") version "2.1.10"
@@ -7,11 +7,11 @@ plugins {
     id("eclipse")
     id("idea")
     id("maven-publish")
-    id("net.neoforged.moddev") version "2.0.112"
+    id("net.neoforged.moddev") version "2.0.123"
 }
 
 group = "net.valhelsia"
-version = "1.21.9-0.1.0"
+version = "1.21.11-0.1.0"
 
 repositories {
     mavenCentral()

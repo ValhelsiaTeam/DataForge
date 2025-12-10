@@ -9,7 +9,7 @@ import net.minecraft.client.data.models.model.ModelTemplates
 import net.minecraft.client.data.models.model.TextureMapping
 import net.minecraft.core.Holder
 import net.minecraft.core.registries.BuiltInRegistries
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.world.item.Item
 import net.minecraft.world.level.block.Block
 
@@ -61,9 +61,9 @@ abstract class ItemModelGenerator(defaultGenerators: ItemModelGenerators) {
     ) = BuiltInRegistries.ITEM.getKey(block.value().asItem())
         .withPath { "item/${if (folder != null) "$folder/" else ""}$it$suffix" }
 
-    data class ModelPredicate(val modelLocation: ResourceLocation, val properties: List<ModelProperty>) {
+    data class ModelPredicate(val modelLocation: Identifier, val properties: List<ModelProperty>) {
 
-        constructor(modelLocation: ResourceLocation, vararg properties: ModelProperty) : this(
+        constructor(modelLocation: Identifier, vararg properties: ModelProperty) : this(
             modelLocation,
             properties.toList()
         )
@@ -71,18 +71,18 @@ abstract class ItemModelGenerator(defaultGenerators: ItemModelGenerators) {
         companion object {
             val CODEC: Codec<ModelPredicate> = RecordCodecBuilder.create {
                 it.group(
-                    ResourceLocation.CODEC.fieldOf("model").forGetter { it.modelLocation },
+                    Identifier.CODEC.fieldOf("model").forGetter { it.modelLocation },
                     Codec.list(ModelProperty.CODEC).fieldOf("predicate").forGetter { it.properties }
                 ).apply(it, ::ModelPredicate)
             }
         }
     }
 
-    data class ModelProperty(val name: ResourceLocation, val value: Float) {
+    data class ModelProperty(val name: Identifier, val value: Float) {
         companion object {
             val CODEC: Codec<ModelProperty> = RecordCodecBuilder.create {
                 it.group(
-                    ResourceLocation.CODEC.fieldOf("name").forGetter { it.name },
+                    Identifier.CODEC.fieldOf("name").forGetter { it.name },
                     Codec.FLOAT.fieldOf("value").forGetter { it.value }
                 ).apply(it, ::ModelProperty)
             }

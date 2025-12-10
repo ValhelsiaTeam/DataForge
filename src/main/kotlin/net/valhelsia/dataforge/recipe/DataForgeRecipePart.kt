@@ -1,6 +1,6 @@
 package net.valhelsia.dataforge.recipe
 
-import net.minecraft.advancements.critereon.ItemPredicate
+import net.minecraft.advancements.criterion.ItemPredicate
 import net.minecraft.core.HolderGetter
 import net.minecraft.world.item.Item
 

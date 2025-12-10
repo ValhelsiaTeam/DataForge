@@ -3,7 +3,7 @@ package net.valhelsia.dataforge.model
 import net.minecraft.client.data.models.model.ModelLocationUtils
 import net.minecraft.client.data.models.model.ModelTemplate
 import net.minecraft.client.data.models.model.TextureMapping
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.world.level.block.Block
 import net.valhelsia.dataforge.DataForge
 import net.valhelsia.dataforge.mixin.ModelTemplateAccessor
@@ -16,9 +16,9 @@ import net.valhelsia.dataforge.mixin.ModelTemplateAccessor
  * @throws IllegalStateException if called outside a BlockModelGenerator or ItemModelGenerator context.
  */
 fun ModelTemplate.createModel(
-    modelLocation: ResourceLocation,
+    modelLocation: Identifier,
     textureMapping: TextureMapping,
-): ResourceLocation = this.create(
+): Identifier = this.create(
     modelLocation,
     textureMapping,
     DataForge.modelOutput
@@ -36,7 +36,7 @@ fun ModelTemplate.createModel(
     block: Block,
     textureMapping: TextureMapping,
     suffix: String = "",
-): ResourceLocation = createModel(
+): Identifier = createModel(
     ModelLocationUtils.getModelLocation(block, suffix + (this as ModelTemplateAccessor).suffix.orElse("")),
     textureMapping,
 )
