@@ -2,16 +2,16 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 plugins {
-    kotlin("jvm") version "2.1.10"
+    kotlin("jvm") version "2.3.0"
     id("java-library")
     id("eclipse")
     id("idea")
     id("maven-publish")
-    id("net.neoforged.moddev") version "2.0.123"
+    id("net.neoforged.moddev") version "2.0.139"
 }
 
 group = "net.valhelsia"
-version = "1.21.11-0.1.0"
+version = "26.1-snapshot-3-0.1.0"
 
 repositories {
     mavenCentral()
@@ -40,7 +40,7 @@ tasks.test {
 }
 
 kotlin {
-    jvmToolchain(21)
+    jvmToolchain(25)
 }
 
 tasks.withType<Jar> {

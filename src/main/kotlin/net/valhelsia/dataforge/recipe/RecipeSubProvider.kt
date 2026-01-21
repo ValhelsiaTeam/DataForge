@@ -28,11 +28,11 @@ abstract class RecipeSubProvider(
 
     fun add(builder: RecipeBuilder, path: String? = null) {
         val id = when {
-            path == null -> RecipeBuilder.getDefaultRecipeId(builder.result)
-            else -> Identifier.fromNamespaceAndPath(DataForge.modId, path)
+            path == null -> builder.defaultId()
+            else -> ResourceKey.create(Registries.RECIPE, Identifier.fromNamespaceAndPath(DataForge.modId, path))
         }
 
-        builder.save(recipeOutput, ResourceKey.create(Registries.RECIPE, id))
+        builder.save(recipeOutput, id)
     }
 
     fun storageRecipe(item: ItemLike, block: ItemLike, groupItem: String? = null, groupBlock: String? = null) {
