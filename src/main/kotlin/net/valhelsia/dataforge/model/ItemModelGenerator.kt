@@ -7,6 +7,7 @@ import net.minecraft.client.data.models.model.ModelLocationUtils
 import net.minecraft.client.data.models.model.ModelTemplate
 import net.minecraft.client.data.models.model.ModelTemplates
 import net.minecraft.client.data.models.model.TextureMapping
+import net.minecraft.client.resources.model.sprite.Material
 import net.minecraft.core.Holder
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.resources.Identifier
@@ -53,6 +54,7 @@ abstract class ItemModelGenerator(defaultGenerators: ItemModelGenerators) {
         suffix: String = ""
     ) = BuiltInRegistries.ITEM.getKey(item.value())
         .withPath { "item/${if (folder != null) "$folder/" else ""}$it$suffix" }
+        .let { Material(it) }
 
     private fun getBlockItemTexture(
         block: Holder<out Block>,
@@ -60,6 +62,7 @@ abstract class ItemModelGenerator(defaultGenerators: ItemModelGenerators) {
         suffix: String = ""
     ) = BuiltInRegistries.ITEM.getKey(block.value().asItem())
         .withPath { "item/${if (folder != null) "$folder/" else ""}$it$suffix" }
+        .let { Material(it) }
 
     data class ModelPredicate(val modelLocation: Identifier, val properties: List<ModelProperty>) {
 
