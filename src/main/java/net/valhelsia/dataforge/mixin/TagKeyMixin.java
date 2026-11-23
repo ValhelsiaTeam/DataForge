@@ -1,6 +1,6 @@
 package net.valhelsia.dataforge.mixin;
 
-import net.minecraft.advancements.criterion.ItemPredicate;
+import net.minecraft.advancements.predicates.ItemPredicate;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
