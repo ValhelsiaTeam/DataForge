@@ -1,8 +1,13 @@
 package net.valhelsia.dataforge
 
+import net.minecraft.advancements.Advancement
 import net.minecraft.core.Registry
 import net.minecraft.data.DataProvider
+import net.minecraft.data.loot.LootTableProvider
+import net.minecraft.data.recipes.RecipeProvider
+import net.minecraft.data.worldgen.BootstrapContext
 import net.minecraft.resources.ResourceKey
+import net.minecraft.world.item.crafting.Recipe
 import net.neoforged.neoforge.data.event.GatherDataRegistryEntriesEvent
 
 abstract class DataCollector {
@@ -29,6 +34,23 @@ abstract class DataCollector {
     ) {
         registryEntryGatherers.add { event ->
             event.add(key) { context -> providers.forEach { it.bootstrap(context) } }
+        }
+    }
+
+    fun addRecipeProvider(
+        factory: (BootstrapContext<Recipe<*>>, BootstrapContext<Advancement>) -> RecipeProvider
+    ) {
+        registryEntryGatherers.add { event ->
+            event.recipe(factory)
+        }
+    }
+
+    fun addLootTableProvider(
+        subProvider: LootTableProvider.SubProviderEntry,
+        vararg subProviders: LootTableProvider.SubProviderEntry
+    ) {
+        registryEntryGatherers.add { event ->
+            event.lootTable(subProvider, *subProviders)
         }
     }
 }
