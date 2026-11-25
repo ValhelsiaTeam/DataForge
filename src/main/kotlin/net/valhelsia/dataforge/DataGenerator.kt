@@ -2,11 +2,21 @@ package net.valhelsia.dataforge
 
 import net.minecraft.core.HolderLookup
 import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider
 import net.neoforged.neoforge.data.event.GatherDataEvent
+import net.neoforged.neoforge.data.event.GatherDataRegistryEntriesEvent
 import java.util.concurrent.CompletableFuture
 
 internal object DataGenerator {
+
+    @SubscribeEvent
+    fun gatherRegistryEntries(event: GatherDataRegistryEntriesEvent) {
+        DataForge.modId = event.modContainer.modId
+
+        val collector = DataForge.collector ?: return
+
+        collector.collectRegistryProviders()
+        collector.registryEntryGatherers.forEach { it(event) }
+    }
 
     @SubscribeEvent
     fun gatherClientData(event: GatherDataEvent.Client) {
@@ -15,21 +25,9 @@ internal object DataGenerator {
         val collector = DataForge.collector ?: return
 
         collector.collectClientProviders(event.createContext())
-        collector.collectRegistryProviders()
-
         collector.clientProviders.forEach { event.generator.addProvider(true, it) }
 
-        val dataProvider = DatapackBuiltinEntriesProvider(
-            event.generator.packOutput,
-            event.lookupProvider,
-            collector.registrySetBuilder,
-            setOf(DataForge.modId)
-        )
-
-        collector.collectServerProviders(event.createContext(dataProvider.registryProvider))
-
-        event.generator.addProvider(true, dataProvider)
-
+        collector.collectServerProviders(event.createContext(event.reloadableLookupProvider))
         collector.serverProviders.forEach { event.generator.addProvider(true, it) }
     }
 

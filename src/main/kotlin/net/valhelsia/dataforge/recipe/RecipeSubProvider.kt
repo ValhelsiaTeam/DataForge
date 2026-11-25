@@ -1,29 +1,28 @@
 package net.valhelsia.dataforge.recipe
 
+import net.minecraft.advancements.Advancement
 import net.minecraft.advancements.predicates.ItemPredicate
 import net.minecraft.advancements.triggers.CriteriaTriggers
 import net.minecraft.advancements.triggers.Criterion
 import net.minecraft.advancements.triggers.InventoryChangeTrigger
-import net.minecraft.core.HolderGetter
-import net.minecraft.core.HolderLookup
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
 import net.minecraft.data.recipes.*
+import net.minecraft.data.worldgen.BootstrapContext
 import net.minecraft.resources.Identifier
 import net.minecraft.resources.ResourceKey
 import net.minecraft.tags.TagKey
 import net.minecraft.world.item.Item
+import net.minecraft.world.item.crafting.Recipe
 import net.minecraft.world.level.ItemLike
 import net.neoforged.neoforge.common.Tags
 import net.valhelsia.dataforge.DataForge
 import java.util.*
 
 abstract class RecipeSubProvider(
-    val registries: HolderLookup.Provider,
-    val recipeOutput: RecipeOutput,
-) : RecipeProvider(registries, recipeOutput) {
-    val items: HolderGetter<Item> = registries.lookupOrThrow(Registries.ITEM)
-
+    recipeOutput: BootstrapContext<Recipe<*>>,
+    advancementOutput: BootstrapContext<Advancement>
+) : RecipeProvider(recipeOutput, advancementOutput) {
     public abstract override fun buildRecipes()
 
     fun add(builder: RecipeBuilder, path: String? = null) {
@@ -32,7 +31,7 @@ abstract class RecipeSubProvider(
             else -> ResourceKey.create(Registries.RECIPE, Identifier.fromNamespaceAndPath(DataForge.modId, path))
         }
 
-        builder.save(recipeOutput, id)
+        builder.save(output, id!!)
     }
 
     fun storageRecipe(item: ItemLike, block: ItemLike, groupItem: String? = null, groupBlock: String? = null) {

@@ -19,6 +19,7 @@ object DataForge {
     fun setup(collector: DataCollector, eventBus: IEventBus) {
         DataForge.collector = collector
 
+        eventBus.addListener(DataGenerator::gatherRegistryEntries)
         eventBus.addListener(DataGenerator::gatherClientData)
     }
 }
